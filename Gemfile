@@ -7,3 +7,4 @@ gem "bundler", "~> 1.7"
 gem "rake", "~> 10.0"
 
 gem 'rspec'
+gem 'guard-rspec', require: false
