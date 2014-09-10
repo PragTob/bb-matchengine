@@ -21,4 +21,18 @@ describe BBMatchengine::Player do
       expect(subject.public_send attribute).to eq send attribute
     end
   end
+
+  describe 'missing an attribute' do
+    let(:missing_hash) do
+      hash = player_attributes
+      hash.delete :rebound
+      hash
+    end
+
+    it 'raises an error noting the missing rebound' do
+      expect do
+        described_class.new 'dummy', missing_hash
+      end.to raise_error BBMatchengine::Player::MissingAttributeError, /rebound/
+    end
+  end
 end
