@@ -11,7 +11,7 @@ module BBMatchengine
   # (experience)
   # (fatigue)
   class Player
-    ATTRIBUTES = [:rebound, :speed]
+    ATTRIBUTES = [:rebound, :speed, :shooting, :defense]
     attr_reader *ATTRIBUTES
 
     class MissingAttributeError < ArgumentError
@@ -30,6 +30,14 @@ module BBMatchengine
       ATTRIBUTES.each do |attribute|
         instance_variable_set :"@#{attribute}", attributes[attribute]
       end
+    end
+
+    def offense_potential
+      0.5 * speed + shooting
+    end
+
+    def defense_potential
+      0.5 * speed + defense
     end
 
     private

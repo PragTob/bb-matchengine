@@ -3,33 +3,48 @@ require 'spec_helper'
 describe BBMatchengine::Game do
   let(:squad1) {SquadFactory.create}
   let(:squad2) {SquadFactory.create 'Blue Dragons'}
-  subject {described_class.new [squad1, squad2]}
+  subject {described_class.new squad1, squad2}
 
   it 'has the given squads' do
-    expect(subject.squads).to eq([squad1, squad2])
+    expect(subject.home_squad).to eq(squad1)
+    expect(subject.away_squad).to eq(squad2)
   end
 
-  it 'has no possessions on initialization' do
-    expect(subject.possessions).to eq([])
+  it 'has the first squad as the offense squad' do
+    expect(subject.offense_squad).to eq(squad1)
   end
 
-  it 'runs the game as long as the current_length is smaller than the overall length' do
-    allow_any_instance_of(BBMatchengine::Possession).to receive(:length).and_return(BBMatchengine::Game::QUARTER_LENGTH)
-    subject.run
-    expect(subject.possessions.size).to eq(4)
+  it 'has the other squad set at the defensive end' do
+    expect(subject.defense_squad).to eq(squad2)
   end
 
-  it 'has the first squad as the current owner in first possession' do
-    expect(subject.current_owner).to eq(squad1)
+  describe '#shot_attempt' do
+    let(:good_shooter) {PlayerFactory.create shooting: 100}
+    let(:good_defender) {PlayerFactory.create defense: 100}
+    let(:bad_shooter) {PlayerFactory.create shooting: 1}
+    let(:bad_defender) {PlayerFactory.create defense: 1}
+
+    before :each do
+      allow(Kernel).to receive(:rand) {|maximum| maximum / 2}
+    end
+
+    it 'lets the good shooter win' do
+      expect do
+        subject.shot_attempt good_shooter, bad_defender
+      end.to change{subject.team_a_score}.by(2)
+    end
+
+    it 'lets the bad shooter loose' do
+      expect do
+        subject.shot_attempt bad_shooter, good_defender
+      end.not_to change{subject.team_a_score}
+    end
   end
 
-  it 'has the last owner squad as the current owner' do
-    allow(subject).to receive(:possessions) {[BBMatchengine::Possession.new(squad2, squad1)]}
-    expect(subject.current_owner).to eq(squad2)
-  end
-
-  it 'has the last opponent squad as the current owner if a turn over happened' do
-    allow(subject).to receive(:possessions) {[BBMatchengine::TurnOver.new(squad2, squad1)]}
-    expect(subject.current_owner).to eq(squad1)
+  describe '#play_possession' do
+    it 'gives the possession to the other team' do
+      subject.play_possession
+      expect(subject.offense_squad).to eq squad2
+    end
   end
 end
