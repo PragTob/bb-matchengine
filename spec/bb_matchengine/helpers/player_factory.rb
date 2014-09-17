@@ -14,4 +14,8 @@ module PlayerFactory
     player_attributes = DEFAULT_ATTRIBUTES.merge attributes
     BBMatchengine::Player.new((attributes[:name] || PLAYER_DEFAULT_NAME),                                          player_attributes)
   end
+
+  def mass_create(amount, attributes = {})
+    (1..amount).map{create}
+  end
 end

@@ -5,8 +5,8 @@ module SquadFactory
 
   def create(team_name = nil, starters = nil, substitutes = nil)
     team_name   ||= SQUAD_DEFAULT_NAME
-    starters    ||= [0..4].map { PlayerFactory.create }
-    substitutes ||= [0..7].map { PlayerFactory.create }
+    starters    ||= PlayerFactory.mass_create 5
+    substitutes ||= PlayerFactory.mass_create 7
     BBMatchengine::Squad.new(team_name, starters, substitutes)
   end
 end
