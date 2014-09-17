@@ -1,8 +1,8 @@
 module BBMatchengine
   class Game
 
-    # http://en.wikipedia.org/wiki/Basketball#Playing_regulations (NBA)
-    QUARTER_LENGTH = 12 * 60
+    # http://en.wikipedia.org/wiki/Basketball#Playing_regulations (EU)
+    QUARTER_LENGTH = 10 * 60
 
     attr_reader :squads, :possessions
 
