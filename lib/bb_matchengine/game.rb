@@ -13,7 +13,7 @@ module BBMatchengine
     end
 
     def run
-      while @current_length < QUARTER_LENGTH * 4
+      until game_end?
         @possessions << Possession.create(self)
         @current_length += last_possession.length
       end
@@ -29,6 +29,10 @@ module BBMatchengine
     private
     def last_possession
       possessions.last
+    end
+
+    def game_end?
+      @current_length >= QUARTER_LENGTH * 4
     end
   end
 end
