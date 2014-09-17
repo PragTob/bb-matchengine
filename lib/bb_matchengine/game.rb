@@ -7,13 +7,15 @@ module BBMatchengine
     attr_reader :squads, :possessions
 
     def initialize(squads)
-      @squads      = squads
-      @possessions = []
+      @squads         = squads
+      @possessions    = []
+      @current_length = 0
     end
 
     def run
-      while current_length < QUARTER_LENGTH * 4
+      while @current_length < QUARTER_LENGTH * 4
         @possessions << Possession.create(self)
+        @current_length += last_possession.length
       end
     end
 
@@ -27,10 +29,6 @@ module BBMatchengine
     private
     def last_possession
       possessions.last
-    end
-
-    def current_length
-      possessions.inject(0) { |sum, p| sum + p.length }
     end
   end
 end
