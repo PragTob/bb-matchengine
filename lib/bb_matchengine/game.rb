@@ -22,24 +22,21 @@ module BBMatchengine
       end
     end
 
+    def play_action
+      action = next_action.new(game)
+      action.play
+      @current_length += action.time
+    end
+
     def play_possession
-      active_player  = offense_on_court.sample
-      defense_player = defense_on_court.sample
-      shot_attempt(active_player, defense_player)
-      @current_length += possession_time
+      until possession_end?
+        play_action
+      end
       switch_possession
     end
 
-    def possession_time
-      Kernel.rand(10..24)
-    end
-
-    def shot_attempt(shooter, defender)
-      @score[@offense_squad] += 2 if shot_made?(defender, shooter)
-    end
-
-    def shot_made? defender, shooter
-      shooter.offense_potential + Kernel.rand(20) > defender.defense_potential + Kernel.rand(20)
+    def increase_score(points)
+      @score[@offense_squad] += points
     end
 
     def team_a_score
@@ -58,16 +55,16 @@ module BBMatchengine
     # end
 
     private
-    def offense_on_court
-      @offense_squad.active_players
-    end
-
-    def defense_on_court
-      @defense_squad.active_players
+    def next_action
+      Shot
     end
 
     def game_end?
       @current_length >= GAME_TIME
+    end
+
+    def possession_end?
+      Kernel.rand(0..1) == 1
     end
 
     def switch_possession
