@@ -23,7 +23,7 @@ module BBMatchengine
     end
 
     def play_action
-      action = next_action.new(game)
+      action = next_action.new(self)
       action.play
       @current_length += action.time
     end
