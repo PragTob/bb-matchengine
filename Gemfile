@@ -8,3 +8,5 @@ gem "rake", "~> 10.0"
 
 gem 'rspec'
 gem 'guard-rspec', require: false
+
+gem 'benchmark-ips'
