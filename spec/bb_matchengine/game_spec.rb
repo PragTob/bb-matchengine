@@ -31,18 +31,42 @@ describe BBMatchengine::Game do
     it 'lets the good shooter win' do
       expect do
         subject.shot_attempt good_shooter, bad_defender
-      end.to change{subject.team_a_score}.by(2)
+      end.to change{subject.home_score}.by(2)
     end
 
     it 'lets the bad shooter loose' do
       expect do
         subject.shot_attempt bad_shooter, good_defender
-      end.not_to change{subject.team_a_score}
+      end.not_to change{subject.home_score}
+    end
+
+    it 'lets a bad shot result in a rebound' do
+      allow(subject).to receive(:rebound)
+      subject.shot_attempt bad_shooter, good_defender
+      expect(subject).to have_received(:rebound)
     end
   end
 
-  describe '#play_possession' do
-    it 'gives the possession to the other team' do
+
+  describe '#rebound' do
+    # TODO: find a better way to influence the outcome
+    it 'keeps the possession in case of an offensive rebound' do
+      allow(Kernel).to receive(:rand) {0}
+      subject.rebound
+      expect(subject.offense_squad).to eq squad1
+    end
+
+    it 'switches possession in case of a defensive rebound' do
+      allow(Kernel).to receive(:rand) {|maximum| maximum}
+      subject.rebound
+      expect(subject.offense_squad).to eq squad2
+    end
+
+  end
+
+  describe '#play_possessceion' do
+    it 'gives the possession to the other team if the player makes the shot' do
+      allow_any_instance_of(BBMatchengine::Player).to receive(:shoot).and_return(true)
       subject.play_possession
       expect(subject.offense_squad).to eq squad2
     end
