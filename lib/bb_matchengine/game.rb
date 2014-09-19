@@ -35,11 +35,7 @@ module BBMatchengine
     end
 
     def shot_attempt(shooter, defender)
-      @score[@offense_squad] += 2 if shot_made?(defender, shooter)
-    end
-
-    def shot_made? defender, shooter
-      shooter.offense_potential + Kernel.rand(20) > defender.defense_potential + Kernel.rand(20)
+      @score[@offense_squad] += 2 if shooter.shoot(defender)
     end
 
     def team_a_score
@@ -49,13 +45,6 @@ module BBMatchengine
     def team_b_score
       @score[@away_squad]
     end
-
-    # def current_owner
-    #   # TODO something more meaningful here
-    #   return squads.first if possessions.empty?
-    #   squad = last_possession.is_a?(TurnOver) ? :opponent_squad : :owner_squad
-    #   last_possession.public_send(squad)
-    # end
 
     private
     def offense_on_court

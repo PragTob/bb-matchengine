@@ -32,6 +32,10 @@ module BBMatchengine
       end
     end
 
+    def shoot(defender)
+      offense_potential + Kernel.rand(20) > defender.defense_potential + Kernel.rand(20)
+    end
+
     def offense_potential
       0.5 * speed + shooting
     end
