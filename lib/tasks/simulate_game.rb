@@ -19,5 +19,5 @@ task :simulate_game, [:number] do |task, args|
     puts "#{game.team_a_score}:#{game.team_b_score}"
   end
 
-  puts "Average score: #{home_total_score/number}:#{away_total_score/number}"
+  puts "Average score: #{home_total_score.to_f/number}:#{away_total_score.to_f/number}"
 end
