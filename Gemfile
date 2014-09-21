@@ -6,7 +6,10 @@ gemspec
 gem "bundler", "~> 1.7"
 gem "rake", "~> 10.0"
 
-gem 'rspec'
-gem 'guard-rspec', require: false
+group :test do
+  gem 'rspec'
+  gem 'guard-rspec', require: false
+  gem 'codeclimate-test-reporter', require: nil
+end
 
 gem 'benchmark-ips'
