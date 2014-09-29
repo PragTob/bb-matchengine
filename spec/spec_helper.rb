@@ -2,6 +2,7 @@ require 'codeclimate-test-reporter'
 CodeClimate::TestReporter.start
 
 require 'bb_matchengine'
+require 'picker'
 require_relative 'bb_matchengine/helpers/all'
 
 RSpec.configure do |config|
