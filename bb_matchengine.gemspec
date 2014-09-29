@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'bb_matchengine/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "bb-matchengine"
+  spec.name          = "bb_matchengine"
   spec.version       = BBMatchengine::VERSION
   spec.authors       = ["Tobias Pfeiffer", "Jalyna Schroeder"]
   spec.email         = ["pragtob@gmail.com", "jalyna.schroeder@gmail.com"]
