@@ -48,8 +48,7 @@ module BBMatchengine
     def rebound
       offense_rebound_score = rebound_score(offense_on_court) / OFFENSIVE_REBOUND_PENALTY
       defense_rebound_score = rebound_score defense_on_court
-      random = Kernel.rand(offense_rebound_score + defense_rebound_score)
-      if random < offense_rebound_score
+      if Picker.successful? offense_rebound_score, defense_rebound_score
         # offense rebound score
       else
         # defense rebound

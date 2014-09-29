@@ -33,8 +33,7 @@ module BBMatchengine
     end
 
     def shoot(defender)
-      random_number = Kernel.rand(offense_potential + defender.defense_potential)
-      random_number < offense_potential
+      Picker.successful? offense_potential, defender.defense_potential
     end
 
     def offense_potential
