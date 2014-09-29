@@ -51,13 +51,13 @@ describe BBMatchengine::Game do
   describe '#rebound' do
     # TODO: find a better way to influence the outcome
     it 'keeps the possession in case of an offensive rebound' do
-      allow(Kernel).to receive(:rand) {0}
+      allow(Picker).to receive_messages(successful?: true)
       subject.rebound
       expect(subject.offense_squad).to eq squad1
     end
 
     it 'switches possession in case of a defensive rebound' do
-      allow(Kernel).to receive(:rand) {|maximum| maximum}
+      allow(Picker).to receive_messages(successful?: false)
       subject.rebound
       expect(subject.offense_squad).to eq squad2
     end
