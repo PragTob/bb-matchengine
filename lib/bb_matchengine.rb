@@ -1,3 +1,5 @@
+require 'picker'
+
 require 'bb_matchengine/version'
 require 'bb_matchengine/player'
 require 'bb_matchengine/lineup'
