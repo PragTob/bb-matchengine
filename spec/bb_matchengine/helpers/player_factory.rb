@@ -16,6 +16,6 @@ module PlayerFactory
   end
 
   def mass_create(amount, attributes = {})
-    (1..amount).map{create}
+    (1..amount).map{create attributes}
   end
 end

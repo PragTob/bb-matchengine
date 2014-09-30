@@ -1,16 +1,17 @@
 module BBMatchengine
   class Squad
 
-    attr_reader :team_name, :active_players, :substitutes
-    ACTIVE_PLAYERS_COUNT = 5
-    MAX_SUBSTITUTES      = 7
-
     class WrongNumberOfActivePlayers < ArgumentError
       def message
         "There have to be #{ACTIVE_PLAYERS_COUNT} ready to play."
       end
     end
+
     class TooManySubstitutesError < ArgumentError ; end
+
+    attr_reader :team_name, :active_players, :substitutes
+    ACTIVE_PLAYERS_COUNT = 5
+    MAX_SUBSTITUTES      = 7
 
     def initialize(team_name, starters, substitutes)
       @team_name      = team_name
