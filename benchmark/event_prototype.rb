@@ -25,7 +25,11 @@ end
 
 class ObjectEventSubscriber
   def initialize(publisher)
-    publisher.subscribe(SimpleEvent) do |event| event.a + event.b end
+    publisher.subscribe(SimpleEvent) do |event| simple_event(event) end
+  end
+
+  def simple_event(event)
+    event.a + event.b
   end
 end
 
@@ -55,14 +59,26 @@ class SymbolEventSubscriber
     publisher.subscribe :simple_event, self
   end
 
-  def simple_event(a, b)
-    a + b
+  def simple_event(payload)
+    payload[:a] + payload[:b]
   end
 end
 
 symbol_publisher = SymbolEventPublisher.new
 symbol_subscriber = SymbolEventSubscriber.new symbol_publisher
-symbol_publisher.emit :simple_event, 1, 2
+symbol_publisher.emit :simple_event, {a: 1, b: 2}
+
+require 'event_bus'
+class SymbolSubscriber
+  def simple_event(payload)
+    payload[:a] + payload[:b]
+  end
+end
+
+
+EventBus.subscribe SymbolSubscriber.new
+EventBus.announce :simple_event, a: 1, b: 2
+
 
 require 'benchmark/ips'
 
@@ -70,6 +86,7 @@ Benchmark.ips do |benchmark|
   benchmark.config(warmup: 10, time: 20)
 
   benchmark.report('object') {object_publisher.emit(SimpleEvent.new 1, 2) }
-  benchmark.report('symbol') {symbol_publisher.emit :simple_event, 1, 2 }
+  benchmark.report('symbol') {symbol_publisher.emit :simple_event, {a: 1, b: 2} }
+  benchmark.report('event_bus') {EventBus.announce :simple_event, a: 1, b: 2 }
 end
 
