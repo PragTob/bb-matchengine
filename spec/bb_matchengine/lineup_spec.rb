@@ -5,7 +5,9 @@ describe BBMatchengine::Lineup do
   let(:players) {PlayerFactory.mass_create 5, rebound: rebound}
   let(:bad_rebounder) {PlayerFactory.create rebound: 0}
   let(:to_substitute) {players.first}
-  subject {BBMatchengine::Lineup.new players}
+  let(:lineup) {BBMatchengine::Lineup.new players}
+
+  subject {lineup}
 
   describe '#substitute' do
     before :each do
@@ -31,6 +33,19 @@ describe BBMatchengine::Lineup do
       expect do
         subject.substitute to_substitute, bad_rebounder
       end.to change {subject.rebound}.by(-rebound)
+    end
+  end
+
+  describe '#rebound_probabilities' do
+
+    subject {lineup.rebound_probabilities}
+
+    it 'returns something with one entry for each player' do
+      expect(subject.length).to eq 5
+    end
+
+    it 'can lookup the rebound value of a player' do
+      expect(subject[players.first]).to eq players.first.rebound
     end
   end
 end

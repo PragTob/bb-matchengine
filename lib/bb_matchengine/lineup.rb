@@ -16,5 +16,12 @@ module BBMatchengine
     def include?(player)
       @players.include? player
     end
+
+    def rebound_probabilities
+      @players.inject({}) do |hash, player|
+        hash[player] = player.rebound
+        hash
+      end
+    end
   end
 end
