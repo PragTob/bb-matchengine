@@ -34,7 +34,7 @@ class ObjectEventSubscriber
 end
 
 object_publisher = ObjectEventPublisher.new
-object_subscriber = ObjectEventSubscriber.new object_publisher
+ObjectEventSubscriber.new object_publisher
 object_publisher.emit(SimpleEvent.new 1, 2)
 
 
@@ -65,7 +65,7 @@ class SymbolEventSubscriber
 end
 
 symbol_publisher = SymbolEventPublisher.new
-symbol_subscriber = SymbolEventSubscriber.new symbol_publisher
+SymbolEventSubscriber.new symbol_publisher
 symbol_publisher.emit :simple_event, {a: 1, b: 2}
 
 require 'event_bus'
@@ -99,14 +99,26 @@ wisper_publisher = WisperPublisher.new
 wisper_publisher.subscribe WisperSymbolSubscriber.new
 wisper_publisher.emit :simple_event, 1, 2
 
+require_relative '../lib/eventor'
+
+class SimpleEventorSubscriber < Eventor::Subscriber
+  on SimpleEvent do |event|
+    event.a + event.b
+  end
+end
+
+eventor_publisher = Eventor::Publisher.new
+SimpleEventorSubscriber.new eventor_publisher
+eventor_publisher.emit SimpleEvent.new 1, 2
+
+
 require 'benchmark/ips'
 
 Benchmark.ips do |benchmark|
-  benchmark.config(warmup: 10, time: 20)
-
   benchmark.report('object') {object_publisher.emit(SimpleEvent.new 1, 2) }
   benchmark.report('symbol') {symbol_publisher.emit :simple_event, {a: 1, b: 2} }
   benchmark.report('event_bus') {EventBus.announce :simple_event, a: 1, b: 2 }
   benchmark.report('wisper') {wisper_publisher.emit :simple_event, 1, 2 }
+  benchmark.report('eventor') {eventor_publisher.emit SimpleEvent.new 1, 2}
 end
 
