@@ -49,9 +49,9 @@ module BBMatchengine
       offense_rebound_score = offense_lineup.rebound / OFFENSIVE_REBOUND_PENALTY
       defense_rebound_score = defense_lineup.rebound
       if Picker.successful? offense_rebound_score, defense_rebound_score
-        # offense rebound score
+        rebounder = Picker.pick offense_lineup.rebound_probabilities
       else
-        # defense rebound
+        rebounder = Picker.pick defense_lineup.rebound_probabilities
         switch_possession
       end
     end
