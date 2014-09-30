@@ -79,6 +79,25 @@ end
 EventBus.subscribe SymbolSubscriber.new
 EventBus.announce :simple_event, a: 1, b: 2
 
+require 'wisper'
+
+class WisperPublisher
+  include Wisper::Publisher
+
+  def emit(event, a, b)
+    publish event, a, b
+  end
+end
+
+class WisperSymbolSubscriber
+  def simple_event(a, b)
+    a + b
+  end
+end
+
+wisper_publisher = WisperPublisher.new
+wisper_publisher.subscribe WisperSymbolSubscriber.new
+wisper_publisher.emit :simple_event, 1, 2
 
 require 'benchmark/ips'
 
@@ -88,5 +107,6 @@ Benchmark.ips do |benchmark|
   benchmark.report('object') {object_publisher.emit(SimpleEvent.new 1, 2) }
   benchmark.report('symbol') {symbol_publisher.emit :simple_event, {a: 1, b: 2} }
   benchmark.report('event_bus') {EventBus.announce :simple_event, a: 1, b: 2 }
+  benchmark.report('wisper') {wisper_publisher.emit :simple_event, 1, 2 }
 end
 
