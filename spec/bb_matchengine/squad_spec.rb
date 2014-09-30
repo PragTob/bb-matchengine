@@ -13,7 +13,7 @@ describe BBMatchengine::Squad do
   end
 
   it 'has the starters as active players' do
-    expect(subject.active_players).to eq starters
+    expect(subject.lineup.to_a).to eq starters
   end
 
   it 'has the substitutes' do
@@ -24,7 +24,7 @@ describe BBMatchengine::Squad do
     let(:starters) {PlayerFactory.mass_create 4}
 
     it 'raises an error' do
-      expect {subject}.to raise_error BBMatchengine::Squad::WrongNumberOfActivePlayers
+      expect {subject}.to raise_error BBMatchengine::Lineup::WrongNumberOfPlayers
     end
   end
 
@@ -32,7 +32,7 @@ describe BBMatchengine::Squad do
     let(:starters) {PlayerFactory.mass_create 6}
 
     it 'raises an error' do
-      expect {subject}.to raise_error BBMatchengine::Squad::WrongNumberOfActivePlayers
+      expect {subject}.to raise_error BBMatchengine::Lineup::WrongNumberOfPlayers
     end
   end
 

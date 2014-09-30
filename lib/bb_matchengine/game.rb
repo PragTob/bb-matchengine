@@ -26,8 +26,8 @@ module BBMatchengine
     end
 
     def play_possession
-      active_player  = offense_on_court.sample
-      defense_player = defense_on_court.sample
+      active_player  = offense_lineup.sample
+      defense_player = defense_lineup.sample
       shot_attempt(active_player, defense_player)
       update_time
     end
@@ -46,8 +46,8 @@ module BBMatchengine
     end
 
     def rebound
-      offense_rebound_score = rebound_score(offense_on_court) / OFFENSIVE_REBOUND_PENALTY
-      defense_rebound_score = rebound_score defense_on_court
+      offense_rebound_score = offense_lineup.rebound / OFFENSIVE_REBOUND_PENALTY
+      defense_rebound_score = defense_lineup.rebound
       if Picker.successful? offense_rebound_score, defense_rebound_score
         # offense rebound score
       else
@@ -69,16 +69,12 @@ module BBMatchengine
     end
 
     private
-    def rebound_score(lineup)
-      lineup.inject(0) {|score, player| score + player.rebound}
+    def offense_lineup
+      @offense_squad.lineup
     end
 
-    def offense_on_court
-      @offense_squad.active_players
-    end
-
-    def defense_on_court
-      @defense_squad.active_players
+    def defense_lineup
+      @defense_squad.lineup
     end
 
     def game_end?
