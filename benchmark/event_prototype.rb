@@ -109,7 +109,7 @@ end
 
 eventor_publisher = Eventor::Publisher.new
 SimpleEventorSubscriber.new eventor_publisher
-eventor_publisher.emit SimpleEvent.new 1, 2
+eventor_publisher.publish SimpleEvent.new 1, 2
 
 
 require 'benchmark/ips'
@@ -119,6 +119,6 @@ Benchmark.ips do |benchmark|
   benchmark.report('symbol') {symbol_publisher.emit :simple_event, {a: 1, b: 2} }
   benchmark.report('event_bus') {EventBus.announce :simple_event, a: 1, b: 2 }
   benchmark.report('wisper') {wisper_publisher.emit :simple_event, 1, 2 }
-  benchmark.report('eventor') {eventor_publisher.emit SimpleEvent.new 1, 2}
+  benchmark.report('eventor') {eventor_publisher.publish SimpleEvent.new 1, 2}
 end
 
