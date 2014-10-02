@@ -5,10 +5,6 @@ module Eventor
       execute_on_subscribes
     end
 
-    def subscribe(event_class, blk)
-      @publisher.subscribe event_class, self, blk
-    end
-
     def self.on(event_class, &blk)
       @subscribes ||= []
       @subscribes << [event_class, blk]
@@ -23,6 +19,10 @@ module Eventor
       self.class.subscribes.each do |event_class, blk|
         subscribe event_class, blk
       end
+    end
+
+    def subscribe(event_class, blk)
+      @publisher.subscribe event_class, self, blk
     end
   end
 end
