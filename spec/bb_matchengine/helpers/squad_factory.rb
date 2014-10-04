@@ -1,7 +1,18 @@
 module SquadFactory
   extend self
 
-  DEFAULT_TEAM = TeamFactory.create name: 'Red Dragons'
+  RED_DRAGONS = TeamFactory.create name: 'Red Dragons'
+  BLUE_WEASELS = TeamFactory.create name: 'Blue Weasels'
+  DEFAULT_TEAM = RED_DRAGONS
+
+
+  def red_dragons
+    create RED_DRAGONS
+  end
+
+  def blue_weasels
+    create BLUE_WEASELS
+  end
 
   def create(team = nil, starters = nil, substitutes = nil)
     team        ||= DEFAULT_TEAM

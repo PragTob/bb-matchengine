@@ -8,12 +8,16 @@ module BBMatchengine
       super publisher
     end
 
+    on Events::TwoPointShotMade do |event|
+      increase_stat(event.player, :points, 2)
+    end
+
     def team(team)
       @team_box_score[team]
     end
 
-    on Events::TwoPointShotMade do |event|
-      increase_stat(event.player, :points, 2)
+    def player(player)
+      @box_score[player]
     end
 
     private
