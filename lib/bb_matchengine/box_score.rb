@@ -14,6 +14,10 @@ module BBMatchengine
       increase_stat(event.player, :field_goals_made, 1)
     end
 
+    on Events::TwoPointShotMissed do |event|
+      increase_stat(event.player, :field_goals_attempted, 1)
+    end
+
     def for(entity)
       @box_score[entity]
     end

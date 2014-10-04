@@ -6,6 +6,7 @@ describe BBMatchengine::BoxScore do
   let(:publisher) {Eventor::Publisher.new}
   let(:player) {squad_a.lineup.sample}
   let(:defender) {squad_b.lineup.sample}
+  let(:event) {described_class.new player, defender}
 
   subject {BBMatchengine::BoxScore.new publisher, squad_a, squad_b}
 
@@ -27,8 +28,6 @@ describe BBMatchengine::BoxScore do
   end
 
   describe BBMatchengine::Events::TwoPointShotMade do
-    let(:event) {described_class.new player, defender}
-
     it 'increases the score' do
       expect_stat_change player, :points, 2
     end
@@ -43,6 +42,16 @@ describe BBMatchengine::BoxScore do
 
     it 'increases field_goals_mad' do
       expect_stat_change player, :field_goals_made, 1
+    end
+  end
+
+  describe BBMatchengine::Events::TwoPointShotMissed do
+    it 'does not increase the score' do
+      expect_stat_change player, :points, 0
+    end
+
+    it 'does increase the field_goals_attempted' do
+      expect_stat_change player, :field_goals_attempted, 1
     end
   end
 end
