@@ -1,4 +1,5 @@
 require 'picker'
+require 'eventor'
 
 require 'bb_matchengine/version'
 require 'bb_matchengine/team'

@@ -1,12 +1,11 @@
 require 'bb_matchengine'
-require_relative '../../spec/bb_matchengine/helpers/player_factory'
-require_relative '../../spec/bb_matchengine/helpers/squad_factory'
+require_relative '../../spec/bb_matchengine/helpers/all'
 
 desc 'Simulate a dummy game'
 task :simulate_game, [:number] do |task, args|
   number = args[:number].to_i || 1
   squad_1 = SquadFactory.create
-  squad_2 = SquadFactory.create
+  squad_2 = SquadFactory.create TeamFactory.create name: 'Blue Dragons'
 
   home_total_score = 0
   away_total_score = 0
