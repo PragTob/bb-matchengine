@@ -10,6 +10,8 @@ module BBMatchengine
 
     on Events::TwoPointShotMade do |event|
       increase_stat(event.player, :points, 2)
+      increase_stat(event.player, :field_goals_attempted, 1)
+      increase_stat(event.player, :field_goals_made, 1)
     end
 
     def for(entity)
@@ -29,7 +31,9 @@ module BBMatchengine
     end
 
     def initial_stats
-      {points: 0}
+      {points:                0,
+       field_goals_attempted: 0,
+       field_goals_made:      0}
     end
 
     def increase_stat(player, stat, value)
