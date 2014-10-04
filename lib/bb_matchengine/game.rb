@@ -89,7 +89,7 @@ module BBMatchengine
     end
 
     def score(team)
-      @box_score.team(team)[:points]
+      @box_score.for(team)[:points]
     end
 
     def publish_event(event)

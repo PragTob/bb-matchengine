@@ -12,18 +12,14 @@ module BBMatchengine
       increase_stat(event.player, :points, 2)
     end
 
-    def team(team)
-      @team_box_score[team]
-    end
-
-    def player(player)
-      @box_score[player]
+    def for(entity)
+      @box_score[entity]
     end
 
     private
     def initialize_box_score(squad_a, squad_b)
-      @box_score        = initial_box_score squad_a.players + squad_b.players
-      @team_box_score   = initial_box_score [squad_a.team, squad_b.team]
+      @box_score        = initial_box_score squad_a.players + squad_b.players +
+                                            [squad_a.team, squad_b.team]
     end
 
     def initial_box_score(entries)
@@ -37,8 +33,8 @@ module BBMatchengine
     end
 
     def increase_stat(player, stat, value)
-      @box_score[player][stat]           += value
-      @team_box_score[player.team][stat] += value
+      @box_score[player][stat]      += value
+      @box_score[player.team][stat] += value
     end
   end
 end
