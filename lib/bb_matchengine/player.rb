@@ -11,8 +11,6 @@ module BBMatchengine
   # (experience)
   # (fatigue)
   class Player
-    ATTRIBUTES = [:rebound, :speed, :shooting, :defense]
-    attr_reader *ATTRIBUTES
 
     class MissingAttributeError < ArgumentError
       def initialize(missing_attributes)
@@ -24,8 +22,13 @@ module BBMatchengine
       end
     end
 
-    def initialize(name, attributes)
+    ATTRIBUTES = [:rebound, :speed, :shooting, :defense]
+    attr_reader *ATTRIBUTES
+    attr_reader :team, :name
+
+    def initialize(name, team, attributes)
       @name = name
+      @team = team
       check_for_missing_attribute attributes
       ATTRIBUTES.each do |attribute|
         instance_variable_set :"@#{attribute}", attributes[attribute]

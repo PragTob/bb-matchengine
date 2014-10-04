@@ -11,12 +11,13 @@ module BBMatchengine
     attr_reader :offense_squad, :defense_squad, :home_squad, :away_squad
 
     def initialize(home_squad, away_squad)
-      @home_squad     = home_squad
-      @away_squad     = away_squad
-      @offense_squad  = @home_squad # TODO Jumpball
-      @defense_squad  = @away_squad
-      @score          = {@offense_squad => 0, @defense_squad => 0}
-      @current_time   = 0
+      @home_squad      = home_squad
+      @away_squad      = away_squad
+      @offense_squad   = @home_squad # TODO Jumpball
+      @defense_squad   = @away_squad
+      @event_publisher = Eventor::Publisher.new
+      @box_score       = BoxScore.new @event_publisher, @home_squad, @away_squad
+      @current_time    = 0
     end
 
     def play
@@ -38,9 +39,10 @@ module BBMatchengine
 
     def shot_attempt(shooter, defender)
       if shooter.shoot(defender)
-        increase_score(2)
+        publish_event Events::TwoPointShotMade.new shooter, defender
         switch_possession
       else
+        publish_event Events::TwoPointShotMissed.new shooter, defender
         rebound
       end
     end
@@ -56,16 +58,13 @@ module BBMatchengine
       end
     end
 
-    def increase_score(value)
-      @score[@offense_squad] += value
-    end
 
     def home_score
-      @score[@home_squad]
+      score(@home_squad.team)
     end
 
     def away_score
-      @score[@away_squad]
+      score(@away_squad.team)
     end
 
     private
@@ -87,6 +86,14 @@ module BBMatchengine
 
     def update_time
       @current_time += possession_time
+    end
+
+    def score(team)
+      @box_score.team(team)[:points]
+    end
+
+    def publish_event(event)
+      @event_publisher.publish event
     end
   end
 end

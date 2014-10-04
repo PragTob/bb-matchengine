@@ -19,9 +19,17 @@ describe BBMatchengine::Player do
 
     it 'raises an error noting the missing rebound' do
       expect do
-        described_class.new 'dummy', missing_hash
+        described_class.new 'dummy', TeamFactory.create, missing_hash
       end.to raise_error BBMatchengine::Player::MissingAttributeError, /rebound/
     end
+  end
+
+  it 'has a team' do
+    expect(subject.team).to eq PlayerFactory::DEFAULT_TEAM
+  end
+
+  it 'has a name' do
+    expect(subject.name).to eq PlayerFactory::DEFAULT_NAME
   end
 
   describe '#offense_potential' do

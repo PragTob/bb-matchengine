@@ -2,8 +2,12 @@ require 'spec_helper'
 
 describe BBMatchengine::Game do
   let(:squad1) {SquadFactory.create}
-  let(:squad2) {SquadFactory.create 'Blue Dragons'}
-  subject {described_class.new squad1, squad2}
+  let(:squad2) {SquadFactory.create TeamFactory.create name: 'Blue Dragons'}
+  subject {described_class.new(squad1, squad2)}
+
+  def expect_to_publish_event(event)
+    expect(subject).to receive(:publish_event).with event
+  end
 
   it 'has the given squads' do
     expect(subject.home_squad).to eq(squad1)
@@ -19,31 +23,50 @@ describe BBMatchengine::Game do
   end
 
   describe '#shot_attempt' do
-    let(:good_shooter) {PlayerFactory.create shooting: 100}
-    let(:good_defender) {PlayerFactory.create defense: 100}
-    let(:bad_shooter) {PlayerFactory.create shooting: 1}
-    let(:bad_defender) {PlayerFactory.create defense: 1}
+    let(:shooter) {squad1.lineup.sample}
+    let(:defender) {squad2.lineup.sample}
 
-    before :each do
-      allow(Kernel).to receive(:rand) {|maximum| maximum / 2}
+    describe 'successful shot' do
+
+      before :each do
+        allow(Picker).to receive_messages(successful?: true)
+      end
+
+      it 'emits two point shot made for a successful shot' do
+        expect_to_publish_event BBMatchengine::Events::TwoPointShotMade.new shooter, defender
+        subject.shot_attempt shooter, defender
+      end
+
+      it 'changes the score' do
+        expect do
+          subject.shot_attempt shooter, defender
+        end.to change {subject.home_score}.by(2)
+      end
     end
 
-    it 'lets the good shooter win' do
-      expect do
-        subject.shot_attempt good_shooter, bad_defender
-      end.to change{subject.home_score}.by(2)
-    end
 
-    it 'lets the bad shooter loose' do
-      expect do
-        subject.shot_attempt bad_shooter, good_defender
-      end.not_to change{subject.home_score}
-    end
+    describe 'shot missed' do
 
-    it 'lets a bad shot result in a rebound' do
-      allow(subject).to receive(:rebound)
-      subject.shot_attempt bad_shooter, good_defender
-      expect(subject).to have_received(:rebound)
+      before :each do
+        allow(Picker).to receive_messages(successful?: false)
+      end
+
+      it 'emits a shot missed event' do
+        expect_to_publish_event BBMatchengine::Events::TwoPointShotMissed.new shooter, defender
+        subject.shot_attempt shooter, defender
+      end
+
+      it 'lets a missed shot result in a rebound' do
+        allow(subject).to receive(:rebound)
+        subject.shot_attempt shooter, defender
+        expect(subject).to have_received(:rebound)
+      end
+
+      it 'does not change the score' do
+        expect do
+          subject.shot_attempt shooter, defender
+        end.not_to change {subject.home_score}
+      end
     end
   end
 

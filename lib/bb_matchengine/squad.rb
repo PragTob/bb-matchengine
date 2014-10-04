@@ -3,15 +3,23 @@ module BBMatchengine
 
     class TooManySubstitutesError < ArgumentError ; end
 
-    attr_reader :team_name, :lineup, :substitutes
+    attr_reader :team, :lineup, :substitutes
     MAX_SUBSTITUTES      = 7
 
-    def initialize(team_name, starters, substitutes)
-      @team_name      = team_name
-      @lineup         = Lineup.new starters
-      @substitutes    = substitutes
+    def initialize(team, starters, substitutes)
+      @team        = team
+      @lineup      = Lineup.new starters
+      @substitutes = substitutes
 
       check_squad
+    end
+
+    def team_name
+      @team.name
+    end
+
+    def players
+      @lineup.players + @substitutes
     end
 
     private

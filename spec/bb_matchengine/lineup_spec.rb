@@ -23,6 +23,10 @@ describe BBMatchengine::Lineup do
     end
   end
 
+  it 'has access to the players it constitutes' do
+    expect(subject.players).to match_array players
+  end
+
   describe '#rebound' do
     it 'responds with the cumulative rebound strength of the players' do
       # testing the real thing would be reimplementing the method

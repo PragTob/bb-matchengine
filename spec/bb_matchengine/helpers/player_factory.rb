@@ -8,11 +8,14 @@ module PlayerFactory
     hash
   end
 
-  PLAYER_DEFAULT_NAME = 'Bob'
+  DEFAULT_NAME = 'Bob'
+  DEFAULT_TEAM = TeamFactory.create
 
   def create(attributes = {})
     player_attributes = DEFAULT_ATTRIBUTES.merge attributes
-    BBMatchengine::Player.new((attributes[:name] || PLAYER_DEFAULT_NAME),                                          player_attributes)
+    BBMatchengine::Player.new((attributes[:name] || DEFAULT_NAME),
+                               attributes[:team] || DEFAULT_TEAM,
+                               player_attributes)
   end
 
   def mass_create(amount, attributes = {})

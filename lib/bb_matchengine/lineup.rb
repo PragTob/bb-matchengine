@@ -9,6 +9,8 @@ module BBMatchengine
 
     PLAYERS_COUNT = 5
 
+    attr_reader :players
+
     def initialize(players)
       @players = players
       check_lineup
